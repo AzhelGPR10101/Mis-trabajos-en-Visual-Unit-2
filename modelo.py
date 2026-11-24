@@ -13,22 +13,22 @@ class Alimento:
             raise ValueError("el campo no puede estar vacio.")
         try:
             self.precio = float(str(self.precio).replace(",", "."))
-        except ValueError:
-            raise ValueError("ingrese solo numeros, por ejemplo 1.25.")
+        except ValueError as exc:
+            raise ValueError("ingrese solo numeros, por ejemplo 1.25.") from exc
         if self.precio <= 0 or self.precio > 1000000:
             raise ValueError("el valor debe ser mayor que cero.")
         try:
             self.sacos = int(self.sacos)
-        except ValueError:
-            raise ValueError("ingrese solo numeros enteros.")
+        except ValueError as exc:
+            raise ValueError("ingrese solo numeros enteros.") from exc
         if self.sacos < 0:
             raise ValueError("el valor debe ser mayor o igual a 0.")
 
     def vender(self, cantidad):
         try:
             cantidad = int(cantidad)
-        except ValueError:
-            raise ValueError("ingrese solo numeros enteros.")
+        except ValueError as exc:
+            raise ValueError("ingrese solo numeros enteros.") from exc
         if cantidad <= 0:
             raise ValueError("la cantidad debe ser mayor que cero.")
         if cantidad > self.sacos:
@@ -48,8 +48,8 @@ class ListaAlimentos:
     def buscar(self, codigo):
         try:
             codigo = int(codigo)
-        except ValueError:
-            raise ValueError("ingrese solo numeros enteros.")
+        except ValueError as exc:
+            raise ValueError("ingrese solo numeros enteros.") from exc
         for elemento in self.lista:
             if elemento.codigo == codigo:
                 return elemento
