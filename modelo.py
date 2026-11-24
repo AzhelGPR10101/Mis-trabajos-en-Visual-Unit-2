@@ -1,55 +1,64 @@
 class Alimento:
-    def __init__(self, codigo, marca, precio, sacos, descripcion):
+    def __init__(self, codigo, marca, precio, sacos, descripcion=""):
         self.codigo = codigo
         self.marca = marca
         self.precio = precio
         self.sacos = sacos
         self.descripcion = descripcion
+        self.validar()
+
+    def validar(self):
+        self.marca = str(self.marca).strip()
+        if self.marca == "":
+            raise ValueError("el campo no puede estar vacio.")
+        try:
+            self.precio = float(str(self.precio).replace(",", "."))
+        except ValueError:
+            raise ValueError("ingrese solo numeros, por ejemplo 1.25.")
+        if self.precio <= 0 or self.precio > 1000000:
+            raise ValueError("el valor debe ser mayor que cero.")
+        try:
+            self.sacos = int(self.sacos)
+        except ValueError:
+            raise ValueError("ingrese solo numeros enteros.")
+        if self.sacos < 0:
+            raise ValueError("el valor debe ser mayor o igual a 0.")
 
     def vender(self, cantidad):
+        try:
+            cantidad = int(cantidad)
+        except ValueError:
+            raise ValueError("ingrese solo numeros enteros.")
         if cantidad <= 0:
-            print("Error: la cantidad debe ser mayor que cero.")
-            return False
+            raise ValueError("la cantidad debe ser mayor que cero.")
         if cantidad > self.sacos:
-            print(f"Error: solo hay {self.sacos} sacos.")
-            return False
+            raise ValueError(f"solo hay {self.sacos} sacos.")
         self.sacos -= cantidad
-        return True
-
-    def __str__(self):
-        return f"{self.codigo:<8}{self.marca:<24}{self.precio:<18.2f}{self.sacos:<14}{self.descripcion:<14}"
 
 
 class ListaAlimentos:
     def __init__(self):
         self.lista = []
-        self.siguiente_codigo = 1
 
-    def agregar(self, marca, precio, sacos, descripcion):
-        alimento = Alimento(self.siguiente_codigo, marca, precio, sacos, descripcion)
+    def registrar(self, marca, precio, sacos):
+        alimento = Alimento(len(self.lista) + 1, marca, precio, sacos)
         self.lista.append(alimento)
-        self.siguiente_codigo += 1
+        return alimento
+
+    def buscar(self, codigo):
+        try:
+            codigo = int(codigo)
+        except ValueError:
+            raise ValueError("ingrese solo numeros enteros.")
+        for elemento in self.lista:
+            if elemento.codigo == codigo:
+                return elemento
+        raise ValueError("no existe ese codigo.")
+
+    def vender(self, codigo, cantidad):
+        alimento = self.buscar(codigo)
+        alimento.vender(cantidad)
         return alimento
 
     def obtener_todos(self):
         return self.lista
-
-    def buscar(self, codigo):
-        for elemento in self.lista:
-            if elemento.codigo == codigo:
-                return elemento
-        return None
-
-    def actualizar_precio(self, codigo, precio):
-        elemento = self.buscar(codigo)
-        if elemento is None:
-            return False
-        elemento.precio = precio
-        return True
-
-    def eliminar(self, codigo):
-        elemento = self.buscar(codigo)
-        if elemento is None:
-            return False
-        self.lista.remove(elemento)
-        return True
