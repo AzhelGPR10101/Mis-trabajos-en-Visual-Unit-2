@@ -1,3 +1,5 @@
+from datetime import datetime
+
 class Pedido:
     def __init__(self, numero, codigo_plato, mesa, cantidad, total, fecha=None, estado="activo"):
         self.numero = numero

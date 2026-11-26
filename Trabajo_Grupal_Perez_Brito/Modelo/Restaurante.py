@@ -1,3 +1,7 @@
+import os
+from Modelo.Plato import Plato
+from Modelo.Pedido import Pedido
+
 class Restaurante:
     def __init__(self, archivo_platos="platos.txt", archivo_pedidos="pedidos.txt"):
         self.archivo_platos = archivo_platos
